@@ -5,16 +5,20 @@ import { useState } from "react";
 import { CascadeSelect } from "primereact/cascadeselect";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import queryString from "query-string";
+
 function SideBar() {
-  const [searchValue, setSearchValue] = useState("science");
+  const [searchValue, setSearchValue] = useState("");
   const [year, setYear] = useState("");
   const [selectedType, setSelectedType] = useState("movie");
+  const [sortType, setSortType] = useState("year.incr");
+  const [genre, setGenre] = useState("");
 
-  const countries = ["movie", "series"];
+  const countries = ["movie", "tvSeries"];
+  const sort = ["year.incr", "year.decr"];
+  const genres = ["War", "Action", "Drama", "Comedy"];
 
-  const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
 
@@ -27,6 +31,8 @@ function SideBar() {
           search: searchValue,
           type: selectedType,
           year: year,
+          sort: sortType,
+          genre: genre,
         },
       },
       {
@@ -56,6 +62,25 @@ function SideBar() {
                   breakpoint="767px"
                   placeholder="Select a Type"
                 />
+                <CascadeSelect
+                  value={sortType}
+                  onChange={(e) => setSortType(e.value)}
+                  options={sort}
+                  optionGroupChildren={["year.incr", "year.decr"]}
+                  className=""
+                  breakpoint="767px"
+                  placeholder="Select a Type"
+                />
+                <CascadeSelect
+                  value={genre}
+                  onChange={(e) => setGenre(e.value)}
+                  options={genres}
+                  optionGroupChildren={["comedy", "war", "action"]}
+                  className=""
+                  breakpoint="767px"
+                  placeholder="Select a Genre"
+                />
+
                 <InputText
                   className="form-control"
                   value={searchValue}

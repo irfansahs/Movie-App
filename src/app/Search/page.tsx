@@ -5,15 +5,25 @@ import SideBar from "../components/SideBar";
 import MainLayout from "../Layouts/MainLayout";
 
 async function Page({ searchParams }: any) {
-  const search = searchParams.search || "";
-  const type = searchParams.type || "";
+  const search = searchParams.search || "batman";
+  const type = searchParams.type || "movie";
   const page = searchParams.page || "1";
   const year = searchParams.year || "";
+  const sort = searchParams.sort || "year.decr";
+  const genre = searchParams.genre || "";
 
-  const response = await fetch(
-    `https://www.omdbapi.com/?s=${search}&type=${type}&y=${year}&page=${page}&apikey=debbe9c`
-  );
+  const url = `https://imdb8.p.rapidapi.com/auto-complete?q=${search}`;
+  const options = {
+    method: "GET",
+    headers: {
+      "X-RapidAPI-Key": "8cc2fee956mshf68b35eba5a4af1p1abd2ejsneeaba5fc01bc",
+      "X-RapidAPI-Host": "imdb8.p.rapidapi.com",
+    },
+  };
+
+  const response = await fetch(url, options);
   const responseJson = await response.json();
+  console.log(responseJson);
 
   return (
     <MainLayout>
@@ -23,19 +33,9 @@ async function Page({ searchParams }: any) {
         </div>
 
         <div className="flex flex-wrap  justify-center  gap-4 ">
-          {responseJson?.Search?.map(
-            (movie: any, index: any) =>
-              (
-                <div key={index}>
-                  <MovieCard
-                    Title={movie.Title}
-                    Poster={movie.Poster}
-                    Year={movie.Year}
-                    imdbID={movie.imdbID}
-                  />
-                </div>
-              ) ?? <p className="text-white">Bulunamadi</p>
-          )}
+          {responseJson?.d?.map((movie: any, index: any) => (
+            <MovieCard key={index} data={movie} />
+          ))}
         </div>
       </div>
       <div className="flex justify-center items-center">
